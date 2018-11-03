@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet"> 
+    <script type="text/javascript" src="https://sdk.clarifai.com/js/clarifai-latest.js"></script>
+
+    <style type="text/css">
+       
+       .text{
+          font-family: 'Roboto Mono', monospace;
+       }
+
+
+
+    </style>
+
+    <title>chillTummy</title>
+  </head>
+  <body>
+    <!-- As a link -->
+    <nav class="navbar navbar-light bg-dark fixed-top">
+      <a class="navbar-brand text" href="#"><h2 style="color:white;">chillTummy</h2></a>
+    </nav>
+
+
+<div class="container-fluid" style="margin-top:100px; margin-left:30px; margin-right:30px;">
+     <div class="row">
+    <div class="col-sm" style="border: 2px solid black; height: 400px; margin:20px">
+      
+     
+   <input type="file" onchange="previewFile()"><br>
+<img src="" height="200" alt="Image preview...">
+
+
+
+
+
+
+
+    </div>
+    <div class="col-sm" style="margin:20px">
+      
+      <ul class="list-group text" style="margin-right:30px">
+        
+        <li class="list-group-item bg-dark" style="color:white;">Cras justo odio</li>
+        <li class="list-group-item">Dapibus ac facilisis in</li>
+        <li class="list-group-item">Morbi leo risus</li>
+        <li class="list-group-item">Porta ac consectetur ac</li>
+        <li class="list-group-item">Vestibulum at eros</li>
+        <li class="list-group-item">Dapibus ac facilisis in</li>
+        <li class="list-group-item">Morbi leo risus</li>
+        <li class="list-group-item">Porta ac consectetur ac</li>
+        <li class="list-group-item">Vestibulum at eros</li>
+        <li class="list-group-item">Dapibus ac facilisis in</li>
+        <li class="list-group-item">Morbi leo risus</li>
+        <li class="list-group-item">Porta ac consectetur ac</li>
+        <li class="list-group-item">Vestibulum at eros</li>
+
+
+
+
+
+
+</ul>
+
+
+
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+    <textarea id="thisLink"  name="message" rows="10" cols="30"></textarea> 
+
+    <input type="submit" onclick="guessThisFood(document.getElementById('thisLink').value)" />
+
+<pre id="results"></pre>
+
+
+
+
+
+ 
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+
+<script
+			  src="https://code.jquery.com/jquery-3.3.1.min.js"
+			  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+			  crossorigin="anonymous"></script>
+
+
+<script>
+   function previewFile(){
+       var preview = document.querySelector('img'); //selects the query named img
+       var file    = document.querySelector('input[type=file]').files[0]; //sames as here
+       var reader  = new FileReader();
+
+       reader.onloadend = function () {
+           preview.src = reader.result;
+       }
+
+       if (file) {
+           reader.readAsDataURL(file); //reads the data as a URL
+       } else {
+           preview.src = "";
+       }
+  }
+
+  previewFile();  //calls the function named previewFile()
+  </script>
+
+<script>
+
+function guessThisFood(link){
+
+  const app = new Clarifai.App({
+    apiKey: '422054bdd48a43089292049e3b0ab94d'
+  });
+
+  var results = "";
+  app.models.predict("bd367be194cf45149e75f01d59f77ba7", link)
+  .then(
+    function(response){
+      var concepts = response['outputs'][0]['data']['concepts']
+      for(var i = 0; i< concepts.length; i++){
+        element = concepts[i]
+        results = results + element.name + ": " + element.value
+        results += "\n"
+      }
+      console.log(results)
+      document.getElementById("results").innerHTML = results;
+    },
+    function(err){
+      console.log(err)
+    },
+  );
+  
+};
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>
